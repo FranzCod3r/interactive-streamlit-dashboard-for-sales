@@ -51,7 +51,7 @@ st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti,
 
 with open("Template_CSV_Sales.csv", "rb") as f:
     st.download_button(
-        label="📥 Scarica Template CSV Vendite",
+        label="📥 Download Template CSV Vendite",
         data=f,
         file_name="Template_CSV_Sales.csv",
         mime="text/csv"
@@ -83,7 +83,7 @@ if uploaded is not None:
     # ========================================
     # ANALISI TEMPORALE — MENSILE
     # ========================================
-    st.subheader("📈 Andamento Mensile (Sales, Profit, Quantity)")
+    st.subheader("📈 Andamento Mensile Vendite")
 
     monthly = df.groupby(["Year", "Month", "Month_Name"])[["Sales", "Profit", "Quantity"]].sum().reset_index()
     monthly = monthly.sort_values(["Year", "Month"])
@@ -121,6 +121,7 @@ if uploaded is not None:
     
     # BARPLOTS
     # SALES PER SUB-CAT
+    
     st.subheader("Sales per Sub-Category")
     
     fig2, ax2 = plt.subplots(figsize=(12, 6))
