@@ -2,7 +2,6 @@
 # DASHBOARD VENDITE & PROFITTI — STREAMLIT
 # ============================================
 import io
-from altair import FontStyle
 import pandas as pd
 import numpy as np
 import seaborn as sns
@@ -26,8 +25,11 @@ def load_data(path):
     # Convert numeric fields
     df["Sales"] = pd.to_numeric(df["Sales"], errors="coerce")
     df["Profit"] = pd.to_numeric(df["Profit"], errors="coerce")
-
+    
+    # Data clean for nulls and duplicates:
     df = df.drop_duplicates()
+    df['Profit'] = df['Profit'].fillna(df.groupby('Sub_Category')['Profit'].transform('median'))
+    df['Sales'] = df['Sales'].fillna(df.groupby('Sub_Category')['Sales'].transform('median'))
 
     # Feature engineering
     df["Year"] = df["Order_Date"].dt.year
