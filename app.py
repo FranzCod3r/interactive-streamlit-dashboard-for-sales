@@ -47,7 +47,7 @@ def load_data(path):
 # --------------------------------------------
 
 st.markdown("<h1 style='text-align: center;'>Dashboard Vendite Avanzata</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti, logistica, prodotti e geografia</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti, logistica, prodotti e mappa geografica</p>", unsafe_allow_html=True)
 
 with open("Template_CSV_Sales.csv", "rb") as f:
     st.download_button(
