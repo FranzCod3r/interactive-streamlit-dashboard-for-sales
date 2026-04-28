@@ -8,6 +8,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 import geopandas as gpd
+from adjustText import adjust_text # only ofr geo map
+
 
 sns.set_theme(style="whitegrid", palette="YlGnBu")
 
@@ -264,6 +266,7 @@ if uploaded is not None:
     # ========================================
     # ANALISI GEOGRAFICA — SALES PER STATE
     # ========================================
+    
     st.subheader("🗺️ Mappa Vendite per Stato")
 
     df_map = df.groupby("State")["Sales"].sum().reset_index()
@@ -275,16 +278,41 @@ if uploaded is not None:
     gdf_merged["centroid"] = gdf_merged.geometry.centroid
 
     fig6, ax6 = plt.subplots(1, 1, figsize=(16, 12), dpi=300)
-    gdf_merged.plot(column="Sales", cmap="YlGnBu", linewidth=0.8, edgecolor="0.8", legend=True, ax=ax6)
+    gdf_merged.plot(
+        column="Sales",
+        cmap="YlGnBu",
+        linewidth=0.8,
+        edgecolor="0.8",
+        legend=True,
+        ax=ax6
+    )
     ax6.set_axis_off()
 
+    # --- TEXT LABELS WITH ADJUST_TEXT ---
+    texts = []
     for idx, row in gdf_merged.iterrows():
         x = row["centroid"].x
         y = row["centroid"].y
-        ax6.text(x, y, row["STATE_NAME"], fontsize=8, ha="center", va="center")
+        texts.append(
+            ax6.text(
+                x, y,
+                row["STATE_NAME"],
+                fontsize=8,
+                ha="center",
+                va="center"
+            )
+        )
+
+    # Adjust labels to avoid overlap
+    adjust_text(
+        texts,
+        ax=ax6,
+        arrowprops=dict(arrowstyle="-", color="gray", lw=0.5)
+    )
 
     plt.title("Sales per State")
     st.pyplot(fig6)
+
 
     # Download PNG
     buf = io.BytesIO()
