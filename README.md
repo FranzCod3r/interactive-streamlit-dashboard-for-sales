@@ -1,7 +1,7 @@
 # Dashboard Vendite & Profitti
 **Interactive Streamlit Dashboard for Sales, Profit, and Logistics Analysis**
 
-## Link to LIVE DEMO >>>
+## Link to LIVE DEMO >>> https://interactive-app-dashboard-for-sales-analysis.streamlit.app/
 
 ## Overview
 This advanced Streamlit dashboard enables comprehensive analysis of sales, profit, shipping logistics, product performance, and geographical distribution. Users can upload their own CSV sales data, preview and clean it, and explore a wide range of interactive visualizations and KPIs.
