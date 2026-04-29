@@ -8,7 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 import geopandas as gpd
-from adjustText import adjust_text # only ofr geo map
+from adjustText import adjust_text # per le labels della Mappa
 
 
 sns.set_theme(style="whitegrid", palette="YlGnBu")
@@ -52,7 +52,7 @@ def load_data(path):
 
 st.markdown("<h1 style='text-align: center;'>Dashboard Vendite Avanzata</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti, logistica, prodotti e mappa geografica</p>", unsafe_allow_html=True)
-
+# Download Template Button
 with open("Template_CSV_Sales.csv", "rb") as f:
     st.download_button(
         label="📥 Download Template CSV Vendite",
@@ -60,7 +60,7 @@ with open("Template_CSV_Sales.csv", "rb") as f:
         file_name="Template_CSV_Sales.csv",
         mime="text/csv"
     )
-
+# CSV Upload Section 
 uploaded = st.file_uploader("Carica il dataset CSV", type="csv")
 
 if uploaded is not None:
@@ -88,7 +88,7 @@ if uploaded is not None:
     # ANALISI TEMPORALE — MENSILE
     # ========================================
     st.subheader("📈 Andamento Mensile Vendite")
-
+    # Feature mensili per ogni anno
     monthly = df.groupby(["Year", "Month", "Month_Name"])[["Sales", "Profit", "Quantity"]].sum().reset_index()
     monthly = monthly.sort_values(["Year", "Month"])
     
@@ -109,10 +109,10 @@ if uploaded is not None:
     # ========================================
     # ANALISI SUB-CATEGORY — PROFIT & SALES
     # ========================================
-    # Feature 
+    # Feature - Numero Vendite per Sub-Categori (descent)
     subcat = df.groupby("Sub_Category")[["Sales", "Profit"]].sum().sort_values("Sales", ascending=False).reset_index()
 
-    # Funzione per assegnare colori
+    # Funzione per assegnare colori in base al profit
     def color_map(profit):
         if profit < 0:
             return "#e22828"   # rosso
@@ -246,18 +246,19 @@ if uploaded is not None:
     # ANALISI LOGISTICA — SHIP DELAY
     # ========================================
     st.subheader("🚚 Analisi Logistica — Tempi di Spedizione")
-
+    # Plto giorni spedizione
     fig4, ax4 = plt.subplots(figsize=(10, 5))
     sns.boxplot(data=df, x="Ship_Delay", ax=ax4, palette="YlGnBu")
     ax4.set_title("Tempi Medi di Spedizione (giorni)")
     st.pyplot(fig4)
+
     # Calcolo tempi medi spedizione
     delay_region = df.groupby("State")["Ship_Delay"].mean().reset_index().sort_values("Ship_Delay", ascending=False)
     # filtro anomalie spedizioni superiori a 3gg
     delay_region = delay_region[delay_region["Ship_Delay"] > 4]
     
     st.subheader(" Ritardi Spedizione")
-
+    # Plot ritardo spedizione in gg
     fig5, ax5 = plt.subplots(figsize=(10, 5))
     sns.barplot(data=delay_region, y="State", x="Ship_Delay", ax=ax5, palette="Blues_r")
     ax5.set_title("Regioni con maggior riratdo (>4gg)")
@@ -266,17 +267,19 @@ if uploaded is not None:
     # ========================================
     # ANALISI GEOGRAFICA — SALES PER STATE
     # ========================================
-    
     st.subheader("🗺️ Mappa Vendite per Stato")
-
+    # Feature - Totale vendite per Stato 
     df_map = df.groupby("State")["Sales"].sum().reset_index()
-
+    # Geo Dataframe - importo confini mappa degli Stati
     gdf_states = gpd.read_file("us-states.json")
+    # Normalizzo nomi
     gdf_states["STATE_NAME"] = gdf_states["name"].str.strip()
-
+    # Merge coordinate degli Stati con le features del df_map
     gdf_merged = gdf_states.merge(df_map, left_on="STATE_NAME", right_on="State", how="left")
+    # Centroidi (centroids) per colori choropleth e 'States' labels
     gdf_merged["centroid"] = gdf_merged.geometry.centroid
 
+    # Map Plot
     fig6, ax6 = plt.subplots(1, 1, figsize=(16, 12), dpi=300)
     gdf_merged.plot(
         column="Sales",
@@ -286,20 +289,29 @@ if uploaded is not None:
         legend=True,
         ax=ax6
     )
+    # hides coordinates axis / nasconde assi coordiante
     ax6.set_axis_off()
 
     # --- TEXT LABELS WITH ADJUST_TEXT ---
+    # Etichette/Labels degli stati sulla mappa
+
+    # Labels Background Box 
+    bbox_style = dict(facecolor="white", edgecolor="none", alpha=0.7, pad=0.4)
+
     texts = []
     for idx, row in gdf_merged.iterrows():
         x = row["centroid"].x
         y = row["centroid"].y
+
         texts.append(
             ax6.text(
                 x, y,
                 row["STATE_NAME"],
                 fontsize=8,
+                fontweight='semibold',
                 ha="center",
-                va="center"
+                va="center",
+                bbox=bbox_style
             )
         )
 
@@ -310,11 +322,10 @@ if uploaded is not None:
         arrowprops=dict(arrowstyle="-", color="gray", lw=0.5)
     )
 
-    plt.title("Sales per State")
+    plt.title("Sales per State", fontweight='semibold')
     st.pyplot(fig6)
 
-
-    # Download PNG
+    # Download PNG Button - scaricare immagine della mappa
     buf = io.BytesIO()
     fig6.savefig(buf, format="png", dpi=300, bbox_inches="tight")
     buf.seek(0)
