@@ -136,6 +136,8 @@ if uploaded is not None:
     )
     
     ax2.set_title("Sales per Sub-Category")
+    plt.setp(ax2.get_yticklabels(), fontweight='semibold')
+
     st.pyplot(fig2)
 
     # PROFIT PER SUB-CAT
@@ -149,6 +151,8 @@ if uploaded is not None:
     )
     
     ax3.set_title("Profit per Sub-Category")
+    plt.setp(ax3.get_yticklabels(), fontweight='semibold')
+
     st.pyplot(fig3)
 
 # ========================================
@@ -188,26 +192,17 @@ if uploaded is not None:
 
         colors_pos = plt.cm.Greens(np.linspace(0.4, 1, len(profit_positive)))
 
-        wedges, texts, autotexts = ax_pos.pie(
+        ax_pos.pie(
             profit_positive["Perc"],
             labels=profit_positive["State"],
             autopct="%1.1f%%",
             startangle=140,
             colors=colors_pos,
             wedgeprops={"width": 0.35},  # crea il donut
+            textprops={'fontweight': 600}, # semibold
             pctdistance=0.5
         )
         
-        # Bold State names
-        for t in texts:
-            t.set_fontweight("bold")
-            t.set_fontsize(11)
-
-        # Rendere le percentuali in bold
-        for a in autotexts:
-            a.set_fontweight("semibold")
-            a.set_fontsize(12)
-
         ax_pos.set_title("Top 5 Stati con Maggior Profitto", fontweight ='semibold', pad=20)
         st.pyplot(fig_pos)
 
@@ -219,26 +214,17 @@ if uploaded is not None:
 
         colors_neg = plt.cm.Reds(np.linspace(0.4, 1, len(profit_negative)))
 
-        wedges, texts, autotexts = ax_neg.pie(
+        ax_neg.pie(
             profit_negative["Perc"],
             labels=profit_negative["State"],
             autopct="%1.1f%%",
             startangle=140,
             colors=colors_neg,
             wedgeprops={"width": 0.35},
+            textprops={'fontweight': 600}, # semibold
             pctdistance=0.5
         )
 
-        # Bold State names
-        for t in texts:
-            t.set_fontweight("bold")
-            t.set_fontsize(12)
-
-        # Rendere le percentuali in bold
-        for a in autotexts:
-            a.set_fontweight("semibold")
-            a.set_fontsize(12)
-        
         ax_neg.set_title("Top 5 Stati con Maggiori Perdite", fontweight='semibold', pad=15)
         st.pyplot(fig_neg)
 
@@ -261,7 +247,10 @@ if uploaded is not None:
     # Plot ritardo spedizione in gg
     fig5, ax5 = plt.subplots(figsize=(10, 5))
     sns.barplot(data=delay_region, y="State", x="Ship_Delay", ax=ax5, palette="Blues_r")
+    
     ax5.set_title("Regioni con maggior riratdo (>4gg)")
+    plt.setp(ax5.get_yticklabels(), fontweight='semibold')
+
     st.pyplot(fig5)
 
     # ========================================
