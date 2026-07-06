@@ -47,8 +47,8 @@ def load_data(path):
 # MAIN APP
 # --------------------------------------------
 
-st.markdown("<h1 style='text-align: center;'>Dashboard Vendite Avanzata</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti, logistica, prodotti e mappa geografica</p>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>📊 Dashboard Vendite Avanzata</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>🎯 Analisi completa: vendite, profitti, logistica, prodotti e mappa geografica</p>", unsafe_allow_html=True)
 st.markdown("""
 <div style='text-align: left;'>
     <p style='font-weight: 600;'>Per iniziare: 👇</p>
