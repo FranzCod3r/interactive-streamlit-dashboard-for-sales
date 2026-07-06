@@ -46,3 +46,6 @@ Your CSV should include:
 - All processing and visualizations are dynamic and update with your data.
 
 ---
+## Dashboard Preview (output)
+<img width="862" height="3650" alt="dashboard" src="https://github.com/user-attachments/assets/223261a6-cd96-4fc8-911c-9b6788673c10" />
+
