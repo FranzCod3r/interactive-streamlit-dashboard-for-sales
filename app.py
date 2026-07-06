@@ -251,12 +251,12 @@ if uploaded is not None:
     # filtro anomalie spedizioni superiori a 3gg
     delay_region = delay_region[delay_region["Ship_Delay"] > 4]
     
-    st.subheader(" Ritardi Spedizione")
+    st.subheader(" Ritardi Spedizione (Sopra 4 giorni)")
     # Plot ritardo spedizione in gg
     fig5, ax5 = plt.subplots(figsize=(10, 5))
     sns.barplot(data=delay_region, y="State", x="Ship_Delay", ax=ax5, palette="Blues_r")
 
-    ax5.set_title("Regioni con maggior riratdo (>4gg)")
+    ax5.set_title("Regioni con maggior ritardo (>4gg)")
     plt.setp(ax5.get_yticklabels(), fontweight= 500)
 
     st.pyplot(fig5)
