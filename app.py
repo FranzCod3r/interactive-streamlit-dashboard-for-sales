@@ -49,6 +49,16 @@ def load_data(path):
 
 st.markdown("<h1 style='text-align: center;'>Dashboard Vendite Avanzata</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Analisi completa: vendite, profitti, logistica, prodotti e mappa geografica</p>", unsafe_allow_html=True)
+st.markdown("""
+<div style='text-align: left;'>
+    <p style='font-weight: 600;'>Per iniziare: 👇</p>
+    <ul style='list-style-position: inside; padding: 0;'>
+        <li>Scarica il 'Template CSV Vendite' qui sotto</li>
+        <li>Carica il CSV scaricato usando il tasto 'Upload'</li>    
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+
 # Download Template Button
 with open("Template_CSV_Sales.csv", "rb") as f:
     st.download_button(
@@ -57,6 +67,7 @@ with open("Template_CSV_Sales.csv", "rb") as f:
         file_name="Template_CSV_Sales.csv",
         mime="text/csv"
     )
+
 # CSV Upload Section 
 uploaded = st.file_uploader("Carica il dataset CSV", type="csv")
 
@@ -84,7 +95,7 @@ if uploaded is not None:
     # ========================================
     # ANALISI TEMPORALE — MENSILE
     # ========================================
-    st.subheader("📈 Andamento Mensile Vendite")
+    st.subheader("📈 Andamento Mensile Vendite - Classificato per Anno")
     # Feature mensili per ogni anno
     monthly = df.groupby(["Year", "Month", "Month_Name"])[["Sales", "Profit", "Quantity"]].sum().reset_index()
     monthly = monthly.sort_values(["Year", "Month"])
@@ -123,7 +134,7 @@ if uploaded is not None:
     # BARPLOTS
     # SALES PER SUB-CAT
     
-    st.subheader("Sales per Sub-Category")
+    st.subheader("Vendite per Sotto-Categoria")
     
     fig2, ax2 = plt.subplots(figsize=(12, 6))
     sns.barplot(data=subcat, y="Sub_Category", 
@@ -132,13 +143,13 @@ if uploaded is not None:
                 palette="YlGnBu_r" 
     )
     
-    ax2.set_title("Sales per Sub-Category")
+    ax2.set_title("Numero Vendite per Sotto-Categoria")
     plt.setp(ax2.get_yticklabels(), fontweight='semibold')
 
     st.pyplot(fig2)
 
     # PROFIT PER SUB-CAT
-    st.subheader("Profit per Sub-Category")
+    st.subheader("Profitto per Sotto-Categoria")
 
     fig3, ax3 = plt.subplots(figsize=(12, 6))
     sns.barplot(data=subcat, y="Sub_Category", 
@@ -147,7 +158,7 @@ if uploaded is not None:
                 palette=subcat["Color"].tolist()
     )
     
-    ax3.set_title("Profit per Sub-Category")
+    ax3.set_title("Profitto per Sotto-Categoria")
     plt.setp(ax3.get_yticklabels(), fontweight='semibold')
 
     st.pyplot(fig3)
@@ -155,7 +166,7 @@ if uploaded is not None:
 # ========================================
 # DONUT: TOP 5 STATI CON MAGGIOR PROFITTO E MAGGIORI PERDITE
 # ========================================
-    st.subheader("Stati con Maggior Profitto e Maggiori Perdite")
+    st.subheader("Sedi con Maggior Profitto e Maggiori Perdite")
 
     # Calcolo profitto totale per stato
     profit_state = df.groupby("State")["Profit"].sum().reset_index()
@@ -200,7 +211,7 @@ if uploaded is not None:
             pctdistance=0.5
         )
         
-        ax_pos.set_title("Top 5 Stati con Maggior Profitto", fontweight ='semibold', pad=20)
+        ax_pos.set_title("Top 5 Sedi con Maggior Profitto", fontweight ='semibold', pad=20)
         st.pyplot(fig_pos)
 
     # -------------------------------
@@ -222,7 +233,7 @@ if uploaded is not None:
             pctdistance=0.5
         )
 
-        ax_neg.set_title("Top 5 Stati con Maggiori Perdite", fontweight='semibold', pad=15)
+        ax_neg.set_title("Top 5 Sedi con Maggiori Perdite", fontweight='semibold', pad=15)
         st.pyplot(fig_neg)
 
     # ========================================
